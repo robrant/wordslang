@@ -3,23 +3,6 @@ import json
 import sys
 import os
 
-#============================================================================================
-# TO ENSURE ALL OF THE FILES CAN SEE ONE ANOTHER.
-
-# Get the directory in which this was executed (current working dir)
-cwd = os.getcwd()
-wsDir = os.path.dirname(cwd)
-
-# Find out whats in this directory recursively
-for root, subFolders, files in os.walk(wsDir):
-    # Loop the folders listed in this directory
-    for folder in subFolders:
-        directory = os.path.join(root, folder)
-        if directory.find('.git') == -1:
-            sys.path.append(directory)
-
-#============================================================================================
-
 def local_on_error(errFile='errors.txt', message=None):
     ''' Handles an error message '''
     
@@ -28,6 +11,29 @@ def local_on_error(errFile='errors.txt', message=None):
     f.close()
 
 #============================================================================================
+
+
+try:
+    #============================================================================================
+    # TO ENSURE ALL OF THE FILES CAN SEE ONE ANOTHER.
+    
+    # Get the directory in which this was executed (current working dir)
+    cwd = os.getcwd()
+    wsDir = os.path.dirname(cwd)
+    
+    # Find out whats in this directory recursively
+    for root, subFolders, files in os.walk(wsDir):
+        # Loop the folders listed in this directory
+        for folder in subFolders:
+            directory = os.path.join(root, folder)
+            if directory.find('.git') == -1:
+                sys.path.append(directory)
+    
+except:
+    local_on_error(message='failed do the sys.path append.\n')
+
+#============================================================================================
+    
 # BOTTLE AND CUSTOM LIBRARY IMPORTS
      
 try:
@@ -170,7 +176,7 @@ def updateSlangPut():
 
 #------------------------------------------------------------------------------------
         
-
+"""
 if __name__ == '__main__':
 
     # Config information from a relative path
@@ -184,3 +190,4 @@ if __name__ == '__main__':
     c, dbh, collection, emoCollection = getMongoHandles(p)
 
     run(host='localhost', port=8044)
+"""

@@ -81,4 +81,7 @@ Other datasets for inclusion?
 Working with academic groups to build upon this list.
 Including non-space separated versions of the emoticons - DONE.
 Inclusion of a fuzzy/regex matching query for terms - with the speed costs that will have. Possibly just partial matching - wild card on the ends of words? 
- 
+
+Sources:
+
+http://www.cool-smileys.com/text-emoticons-part1 & http://www.cool-smileys.com/text-emoticons-part2 for the emoticon lookup

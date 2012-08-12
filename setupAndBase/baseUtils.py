@@ -3,6 +3,11 @@ import mdb
 import ConfigParser
 import json
 
+# Get the directory in which this was executed (current working dir)
+cwd = os.getcwd()
+wsDir = os.path.dirname(cwd)
+
+
 class getConfigParameters():
     ''' Gets the configuration parameters into an object '''
     
@@ -20,14 +25,20 @@ class getConfigParameters():
         self.dbPort     = config.getint("backend", "port")
         self.db         = config.get("backend", "db")
 
-        self.dbUser     = config.get("backend", "user")
-        self.dbPassword = config.get("backend", "password")
-        self.collection = config.get("backend", "collection")
-        self.indexes    = json.loads(config.get("backend", "indexes"))
+        self.dbUser         = config.get("backend", "user")
+        self.dbPassword     = config.get("backend", "password")
+        
+        # Collections and indexes
+        self.collections     = json.loads(config.get("backend", "collections"))
+        self.slangCollection = self.collections[0]['collection']
+        self.emoCollection   = self.collections[1]['collection']
+        
         self.dropCollection = config.getboolean("backend", "drop_collection")
 
         # Base Dictionary to be used
-        self.sourcePath       = config.get("source", "source_path")
+        dataDirectory         = config.get("source", "source_path")
+        self.sourcePath       = os.path.join(wsDir, dataDirectory)
+        
         self.enPlainFile      = config.get("source", "en_plain")
         self.enNormalisedFile = config.get("source", "en_normalised")
         self.slangFile        = config.get("source", "en_slang")
@@ -36,14 +47,11 @@ class getConfigParameters():
         # Error Logging
         self.verbose   = config.getboolean("error", "verbose")
         self.writeOut  = config.getboolean("error", "write_out")    
-        self.errorFile = config.get("error", "err_file")
-        self.errorPath = config.get("error", "err_path") 
 
-        # URL query parameter field/name
-        self.qToken  = config.get("url", "token_query")
-        self.qSlang  = config.get("url", "slang_query")
-        self.qExists = config.get("url", "word_exists")        
-        self.qPhone  = config.get("url", "phonetic_query")
+        errorPath       = config.get("error", "err_path")   
+        self.errorPath = os.path.join(wsDir, errorPath)
+        self.errorFile = config.get("error", "err_file")
+        
 
 #----------------------------------------------------------------------------------------
 
@@ -60,9 +68,10 @@ def getMongoHandles(p):
         print "Failed to authenticate with mongo db."
         print e
 
-    collHandle = dbh[p.collection]
+    collHandle = dbh[p.slangCollection]
+    emoCollHandle = dbh[p.emoCollection]
     
-    return c, dbh, collHandle
+    return c, dbh, collHandle, emoCollHandle
 
 #-------------------------------------------------------------------------------------
 

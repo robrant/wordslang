@@ -3,7 +3,23 @@ import sys
 import logging
 import ConfigParser
 import os
-import re
+
+#============================================================================================
+# TO ENSURE ALL OF THE FILES CAN SEE ONE ANOTHER.
+
+# Get the directory in which this was executed (current working dir)
+cwd = os.getcwd()
+wsDir = os.path.dirname(cwd)
+
+# Find out whats in this directory recursively
+for root, subFolders, files in os.walk(wsDir):
+    # Loop the folders listed in this directory
+    for folder in subFolders:
+        directory = os.path.join(root, folder)
+        if directory.find('.git') == -1:
+            sys.path.append(directory)
+
+#============================================================================================
 
 from baseUtils import getConfigParameters, getMongoHandles, handleErrors, decodeEncode
 import mdb
@@ -32,7 +48,7 @@ def mongoUpdate(p, collection, word, slang):
         exists = collection.find(q).count()
         if exists == 0:
             collection.insert(q)
-     
+        
     except Exception, e:
         handleErrors(p, e)   
     
@@ -40,63 +56,34 @@ def mongoUpdate(p, collection, word, slang):
     up = {'$addToSet':{'slang':slang}}
     
     try:
-        response = collection.update(q, up)
+        collection.update(q, up)
     
     except Exception, e:
-        response = None
         handleErrors(p, e)
-
-    return response
-
-#----------------------------------------------------------------------------------------
-
-def getAliases(word):
-    ''' Pick out the bracketed aliases from the word element'''
-    
-    regExp = re.compile('(\(.*\))')
-    regOut = re.search(regExp, word)
-    
-    if regOut:
-        st = regOut.start()
-        sp = regOut.end()
-        alias = word[st+1:sp-1]
-    else:
-        alias = None
         
-    return alias
+    return
 
 #----------------------------------------------------------------------------------------
 
-def getDespaced(slang):
-    ''' Removes spaces and returns slang(s) as a list'''
-
-    # Add the existing slang to a list
-    slangs = [slang]
-    
-    # Remove all spaces from the slang term and add that to the list too
-    while slang.find(' ') >= 0:
-        slang = slang.replace(' ', '')
-
-    if slang not in slangs:
-        slangs.append(slang)
-
-    return slangs
-
-#----------------------------------------------------------------------------------------
-
-def main(configFile):
+def main(configFile, file='norm'):
     ''' Holds it all together '''
     
     # Get the config information into a single object. p also gets passed into the listener
     p = getConfigParameters(configFile)
 
     # Handle the mongo connection and authentication
-    c, dbh, collection = getMongoHandles(p)
+    c, dbh, collection, emoCollection = getMongoHandles(p)
+
+    if file == 'norm':
+        fileToProcess = p.enNormalisedFile
+    elif file == 'slang':
+        fileToProcess = p.slangFile
 
     # Open the english dictionary file and loop it
     try:
-        f = open(os.path.join(p.sourcePath, p.emoticons), 'r')
+        f = open(os.path.join(p.sourcePath, fileToProcess), 'r')
     except Exception, e:
+        print e
         handleErrors(p, e)
     
     i = 1
@@ -107,33 +94,15 @@ def main(configFile):
         try:
             line = line.rstrip('\n').rstrip('\r')
             line = line.split(',')
+            slang, word = line[0], line[1]
         except Exception, e:
-            handleErrors(p, e) 
-        
-        # Split up the line and take the first 2 columns           
-        try:
-            word, slang = line[0], line[1] 
-        except Exception, e:
-            handleErrors(p, e) 
-                
-        # Handle the decoding/encoding for mongo           
+            handleErrors(p, e)
+                   
         word = decodeEncode(word.lower())
-        slang  = decodeEncode(slang)
+        slang  = decodeEncode(slang.lower())
         
-        # Drop the lead and end spaces and make it a list
-        slang = slang.strip()
-        
-        # Get the space-removed emoticons
-        slangs = getDespaced(slang)
-        
-        # Get any aliases (as bracketed terms)
-        alias = getAliases(word)
-        if alias:
-            slangs.append(alias)
-
         # Pass to mongo inserter
-        for slang in slangs:
-            res = mongoUpdate(p, collection, word, slang)
+        res = mongoUpdate(p, collection, word, slang)
 
         # Counter
         i += 1
@@ -156,4 +125,4 @@ if __name__ == '__main__':
         print 'no Config file provided. Exiting.'
         sys.exit()
     
-    main(configFile)
+    main(configFile, norm=True)

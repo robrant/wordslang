@@ -20,7 +20,7 @@ def checkAll(collection, flds, token):
 #----------------------------------------------------------------------------------------
 
 def mongoUpdate(collection, word, field, token):
-    ''' Inserts the word and its phonetic representation into a new mongo document. '''
+    ''' Inserts the word and its slang or emoticon representation. '''
     
     # The query condition for the update
     query = {'word' : word}
@@ -64,9 +64,12 @@ def checkEmo(emoCollection, token):
     query = {'emo' : token}
     
     # Just in case the word doesn't already exist, create a new dictionary item with it, so that it maps to the emoticon/slang
+    results = []
     try:
         res = emoCollection.find(query)
-        results = [r for r in res]
+        for r in res:
+            del r['_id']
+            results.append(r)
     except:
         results = None
 
@@ -82,10 +85,14 @@ def submitQuery(collection, emoCollection, token, flds, check, output, regex=Non
         
         if output == 'exists':
             results = checkLengthForExists(results)
+        
+        elif output == 'all':
+            if len(results) == 0:
+                results = []
         else:
             out = []
             for document in results:
-                out.append({output:document['word']})
+                out.append({output:document[output]})
             results = out
             
     # Check against every field to see if it exists in it
@@ -99,7 +106,7 @@ def submitQuery(collection, emoCollection, token, flds, check, output, regex=Non
             if len(results) == 0:
                 results = []
         
-        # Check all fields, output just 'ouput' selection 
+        # Check all fields, output just 'output' selection 
         else:
             out = []
             for document in results:
@@ -111,10 +118,8 @@ def submitQuery(collection, emoCollection, token, flds, check, output, regex=Non
         results = []
         
         # Allow for regex query
-        print regex
         if regex == True:
             query = {check : {'$regex':'.*%s.*' %token.lower()}}
-            print json.dumps(query)
         else:
             query = {check : token.lower()}
 

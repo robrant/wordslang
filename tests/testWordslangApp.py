@@ -363,8 +363,25 @@ class Test(unittest.TestCase):
         
         self.assertEquals(truth, out)
         self.assertEquals(jsonTruth, jsonOut)
+
+#---------------------------------------------------------------------------
+    def testRegexForEmoticon(self):
+        '''Checks the regex against a range of emoticons.'''
         
+        inTexts = ['the quick... lazy dog',                             # The use of ... for expansion
+                   'the quick:-)brown fox jumped over the lazy dog',    # Included in text, no spaces
+                   'the quick... lazy dog :-(',                         # Simple case - separated by space
+                   'the quick... lazy dog:-(',                          # Emoticon on the end of text
+                   'the:o) quick... lazy dog',                          # Some text characters amongst punctuation
+                   ':-s',                                               # Again - some characters in the emoticon
+                   ]
+        url = '%s/wordslang?%s&%s&%s&%s' %(self.url,'token=miler', 'check=slang', 'output=exists', 'regex=true')
+        out = urllib2.urlopen(url).read()
+        jsonOut = json.loads(out)
         
+        self.assertEquals(truth, out)
+        self.assertEquals(jsonTruth, jsonOut)
+                
 #---------------------------------------------------------------------------
 
 

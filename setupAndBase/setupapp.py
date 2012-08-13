@@ -44,19 +44,19 @@ setupDatabase.main(configFile)
 
 # Insert the large english dictionary
 print 'Inserting main english dictionary'
-#ied.main(configFile)
+ied.main(configFile)
 
 # Insert the normalised file database
 print 'Inserting normalised english list'
-#ies.main(configFile, file='norm')
+ies.main(configFile, file='norm')
 
 # Insert the slang database
 print 'Inserting slang list'
-#ies.main(configFile, file='slang')
+ies.main(configFile, file='slang')
 
 # Insert the emoticons
 print 'Inserting emoticons'
-#ie.main(configFile)
+ie.main(configFile)
 
 # Called using:
-#python setupapp.py ~/Documents/Code/eclipseWorkspace/wordslang/config/wordslang.cfg
+#python setupapp.py ../config/wordslang.cfg [dotcloud | local] 

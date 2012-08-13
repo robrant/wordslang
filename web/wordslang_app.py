@@ -17,11 +17,9 @@ def local_on_error(errFile='errors.txt', message=None):
     f.write(message + '\n')
     f.close()
 
-local_on_error(message='this printed from the correct file.')
-
+#============================================================================================
+# TO ENSURE ALL OF THE FILES CAN SEE ONE ANOTHER.
 try:
-    #============================================================================================
-    # TO ENSURE ALL OF THE FILES CAN SEE ONE ANOTHER.
         
     # Find out whats in this directory recursively
     for root, subFolders, files in os.walk(wsDir):

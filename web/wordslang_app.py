@@ -3,6 +3,13 @@ import json
 import sys
 import os
 
+#============================================================================================
+
+# Get the directory in which this was executed (current working dir)
+cwd = os.getcwd()
+wsDir = os.path.dirname(cwd)
+
+
 def local_on_error(errFile='errors.txt', message=None):
     ''' Handles an error message '''
     
@@ -10,17 +17,12 @@ def local_on_error(errFile='errors.txt', message=None):
     f.write(message + '\n')
     f.close()
 
-#============================================================================================
-
+local_on_error(message='this printed from the correct file.')
 
 try:
     #============================================================================================
     # TO ENSURE ALL OF THE FILES CAN SEE ONE ANOTHER.
-    
-    # Get the directory in which this was executed (current working dir)
-    cwd = os.getcwd()
-    wsDir = os.path.dirname(cwd)
-    
+        
     # Find out whats in this directory recursively
     for root, subFolders, files in os.walk(wsDir):
         # Loop the folders listed in this directory

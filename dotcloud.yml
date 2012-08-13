@@ -1,4 +1,5 @@
 www:
+ approot: web
  type: python
 data:
  type: mongodb

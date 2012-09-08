@@ -1,3 +1,0 @@
-bottle
-pymongo==1.10.1
-

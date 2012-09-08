@@ -1,4 +1,30 @@
 import json
+import pymongo
+import os
+import sys
+
+#============================================================================================
+# TO ENSURE ALL OF THE FILES CAN SEE ONE ANOTHER.
+# Get the directory in which this was executed (current working dir)
+cwd = os.getcwd()
+wsDir = os.path.dirname(cwd)
+
+try:
+        
+    # Find out whats in this directory recursively
+    for root, subFolders, files in os.walk(wsDir):
+        # Loop the folders listed in this directory
+        for folder in subFolders:
+            directory = os.path.join(root, folder)
+            if directory.find('.git') == -1:
+                sys.path.append(directory)
+    
+except:
+    print 'failed do the sys.path append.\n'
+
+#============================================================================================
+    
+import mdb
 
 def checkAll(collection, flds, token):
     ''' Queries every field in the mongo document for the token.'''
@@ -77,9 +103,15 @@ def checkEmo(emoCollection, token):
 
 #------------------------------------------------------------------------------------
 
-def submitQuery(collection, emoCollection, token, flds, check, output, regex=None):
+def submitQuery(dbh, p, collection, emoCollection, token, flds, check, output, regex=None):
     '''Query mongo with query and optionally just count.'''
 
+    # Quick db quthorisation catch
+    try:
+        collection.find_one()
+    except (pymongo.errors.OperationFailure, pymongo.errors.AutoReconnect):
+        mdb.authenticate(dbh, p.dbUser, p.dbPassword)
+        
     if check == 'emo':
         results = checkEmo(emoCollection, token)
         

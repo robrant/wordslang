@@ -2,6 +2,7 @@ import os
 import mdb
 import ConfigParser
 import json
+import sys
 
 # Get the directory in which this was executed (current working dir)
 cwd = os.getcwd()
@@ -72,6 +73,18 @@ def getMongoHandles(p):
     emoCollHandle = dbh[p.emoCollection]
     
     return c, dbh, collHandle, emoCollHandle
+
+#------------------------------------------------------------------------
+def authenticate(dbh, user, password):
+    ''' Authenticates the connection'''
+
+    if user and password: 
+        try:
+            auth = dbh.authenticate(user, password)
+        except Exception, e:
+            sys.stderr.write("**** Failed to authenticate with mongo db. %s **** \n" % e)
+
+    return dbh
 
 #-------------------------------------------------------------------------------------
 

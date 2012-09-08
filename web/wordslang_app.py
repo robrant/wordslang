@@ -113,7 +113,7 @@ def word_check():
         regex = None
  
     # Get the results in the correct format
-    results = submitQuery(collection, emoCollection, token=token, flds=paramOptions,
+    results = submitQuery(dbh, p, collection, emoCollection, token=token, flds=paramOptions,
                           check=check, output=output, regex=regex)
         
     return results

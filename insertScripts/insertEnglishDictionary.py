@@ -84,7 +84,7 @@ def main(configFile):
             handleErrors(p, e) 
                    
         word = decodeEncode(word.lower())
-        pho  = decodeEncode(pho)
+        pho  = decodeEncode(pho.lower())
         
         # Pass to mongo inserter
         res = mongoInserter(p, collection, word, pho)

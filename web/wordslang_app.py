@@ -38,7 +38,7 @@ except:
      
 try:
     import bottle
-    from bottle import route, run, request, abort, error
+    from bottle import route, run, request, abort, error, static_file
 except:
     local_on_error(message='failed import of bottle.')
     
@@ -84,6 +84,60 @@ except Exception, e:
 def get_test():
     return json.dumps({'hello':'foobar'})
 
+
+#------------------------------------------------------------------------------------
+
+@route('/', method='GET')
+@route('/home', method='GET')
+@route('/index', method='GET')
+def homePage():
+    ''' The wordslang home page'''
+    return static_file('index.html', root=os.path.join(wsDir, 'static/'))
+
+#------------------------------------------------------------------------------------
+
+@route('/examples', method='GET')
+def examplesPage():
+    ''' The wordslang examples page'''
+    return static_file('examples.html', root=os.path.join(wsDir, 'static/'))
+
+#------------------------------------------------------------------------------------
+
+@route('/credits', method='GET')
+def creditsPage():
+    ''' Some of the credits for the data'''
+    return static_file('credits.html', root=os.path.join(wsDir, 'static/'))
+
+#------------------------------------------------------------------------------------
+
+@route('/distinctdump')
+def word_dump():
+    '''Just does distinct dumping of words, pho and slang.'''
+
+    validChecks  = ['word', 'pho', 'slang', 'emo']
+    
+    # Get the checks and output
+    try:    check = request.query.check.lower()
+    except: abort(400, 'No check specified. \n Options: check=%s' %('|'.join(validChecks)))
+
+    # Make sure they conform
+    if check not in validChecks:
+        abort(400, 'No check specified. \n Options: check=%s' %('|'.join(validChecks)))
+    
+    results = submitDistinctQuery(dbh, p, collection, emoCollection, check=check)
+    
+    return results
+    
+#------------------------------------------------------------------------------------------------
+
+@route('/static/<filepath:path>')
+def server_static(filepath):
+    ''' Route to serve up the static files'''
+    print p.webStaticRoute, filepath
+    
+    #return static_file(filepath, root='/Users/brantinghamr/Documents/Code/eclipseWorkspace/eventigram/dev/app/static/')
+    return static_file(filepath, root=p.webStaticRoute)
+
 #------------------------------------------------------------------------------------
 
 @route('/ws')
@@ -111,7 +165,7 @@ def word_check():
         regex = bool(request.query.regex)
     except:
         regex = None
- 
+
     # Get the results in the correct format
     results = submitQuery(dbh, p, collection, emoCollection, token=token, flds=paramOptions,
                           check=check, output=output, regex=regex)
@@ -149,7 +203,7 @@ def updateEmoPut():
 #------------------------------------------------------------------------------------
 
 @route('/putslang', method='PUT')
-@route('/putslang', method='POST')
+@route('/postslang', method='POST')
 def updateSlangPut():
     '''# Accept a list/array of pairs: [{"hello":"hi"},{"hello","yo"}] '''
     

@@ -36,6 +36,8 @@ class getConfigParameters():
         
         self.dropCollection = config.getboolean("backend", "drop_collection")
 
+        self.webStaticRoute = config.get("web", "webStaticRoute")
+        
         # Base Dictionary to be used
         dataDirectory         = config.get("source", "source_path")
         self.sourcePath       = os.path.join(wsDir, dataDirectory)

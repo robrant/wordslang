@@ -63,21 +63,29 @@ def main(configFile=None):
     
     # Get the parameters that were set up by dotcloud
     dcParams = getEnvironment()
+    print dcParams.adminUser, dcParams.adminPass
     
     # Authenticate on the admin db
-    c, dbh = mdb.getHandle(host=dcParams.mongoHost, port=dcParams.mongoPort, db='admin')
-
+    c, adminDbh = mdb.getHandle(host=dcParams.mongoHost, port=dcParams.mongoPort, db='admin')
+    print 'got handle'
     # Authentication of the administrator
     try:
-        auth = dbh.authenticate(dcParams.adminUser, dcParams.adminPass)
+        auth = adminDbh.authenticate(dcParams.adminUser, dcParams.adminPass)
     except Exception, e:
         print "Failed to authenticate with mongo db."
         print e
-
-    # Create a new user
+    
+    # Get config for the new user creation
     p = getConfigParameters(configFile)
+    
+    # Get a handle on the dictionary db
+    dbh = c[p.db]
     success = dbh.add_user(p.dbUser, p.dbPassword)
+    c.disconnect()
+    
     try:
+        # Authenticate on the admin db
+        c, dbh = mdb.getHandle(host=dcParams.mongoHost, port=dcParams.mongoPort, db=p.db)
         auth = dbh.authenticate(p.dbUser, p.dbPassword)
     except Exception, e:
         print "Failed to authenticate with mongo db."

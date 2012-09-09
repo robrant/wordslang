@@ -103,6 +103,28 @@ def checkEmo(emoCollection, token):
 
 #------------------------------------------------------------------------------------
 
+def submitDistinctQuery(dbh, p, collection, emoCollection, check):
+    '''Query mongo for a UNIQUE list of phonetics.'''
+
+    # Quick db quthorisation catch
+    try:
+        collection.find_one()
+    except (pymongo.errors.OperationFailure, pymongo.errors.AutoReconnect):
+        mdb.authenticate(dbh, p.dbUser, p.dbPassword)
+    
+    # Make sure we use the right collection
+    if check == 'emo':
+        res = emoCollection.distinct(check)
+    else:
+        res = collection.distinct(check)
+            
+    # Iterate the results into a list
+    results = [r for r in res]
+    
+    return ','.join(results)
+    
+#------------------------------------------------------------------------------------
+
 def submitQuery(dbh, p, collection, emoCollection, token, flds, check, output, regex=None):
     '''Query mongo with query and optionally just count.'''
 
@@ -173,7 +195,8 @@ def submitQuery(dbh, p, collection, emoCollection, token, flds, check, output, r
         else:
             out = []
             for document in results:
-                out.append({output:document[output]})
+                newRes = {output:document[output]}
+                out.append(newRes)
             results = out
             
     return json.dumps(results)

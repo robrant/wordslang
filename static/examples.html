@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+	<head>
+		<title>Wordslang</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15" />
+		<link rel="stylesheet" href="/static/styles.css" type="text/css" />
+		
+	</head>
+	<body>
+	<div id="conteneur">
+		  <div id="header">Wordslang</div>
+		  
+		  <div id="haut">
+			<ul class="menuhaut">
+				<li><a href="">API Description</a></li>
+				<li><a href="/examples">Examples</a></li>
+				<li><a href="/credits">Credits</a></li>
+			</ul>
+		  </div>
+
+		  <div id="centre">
+			<h2>API Examples</h2>
+			</br>
+			<h4>Search by slang</h4>
+			</br>
+
+			<p>Submit slang or abbreviated form of a word (like 'smillleee') to find words associated with it</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=smillleee&check=slang&output=word">
+						http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>smillleee</strong>&check=<strong>slang</strong>&output=<strong>word</strong></a>
+			</p> </br>
+
+			<p>Submit slang to find the phonetic format of the word associated with it</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=smillleee&check=slang&output=pho">
+						http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>smillleee</strong>&check=<strong>slang</strong>&output=<strong>pho</strong></a>
+			</p> </br>
+
+			<p>Check whether the slang term exists in the db</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=smillleee&check=slang&output=exists">
+						http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>smillleee</strong>&check=<strong>slang</strong>&output=<strong>exists</strong></a>
+			</p></br>
+
+			<h4>Search by word</h4>
+			</br>
+
+			<p>Submit a word and get back it's slang versions</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=smile&check=word&output=slang">
+					   http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>smile</strong>&check=<strong>word</strong>&output=<strong>slang</strong></a>
+			</p> </br>
+
+			<p>Submit a word and get back its phonetic representation</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=smile&check=word&output=pho">
+						http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>smile</strong>&check=<strong>word</strong>&output=<strong>pho</strong></a>
+			</p> </br>
+
+			<p>Check whether the slang term exists in the db</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=smile&check=word&output=exists">
+						http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>smile</strong>&check=<strong>word</strong>&output=<strong>exists</strong></a>
+			</p></br>
+
+			<h4>Search by phonetic</h4>
+			</br>
+
+			<p>Submit the phonetic representation and get back the corresponding word(s)</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=sml&check=pho&output=word">
+					   					   http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>sml</strong>&check=<strong>pho</strong>&output=<strong>word</strong></a>
+			</p> </br>
+
+			<p>Check whether a phonetic representation exists in the db</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=sml&check=pho&output=exists">
+										   http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>sml</strong>&check=<strong>pho</strong>&output=<strong>exists</strong></a>
+			</p></br>		
+
+			<h4>Emoticon-based Queries</h4>
+			</br>
+
+			<p>Get words that correpond to a submitted emoticon</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/ws?token=:-)&check=emo&output=word">
+										   http://word-redsquirrel.dotcloud.com/ws?token=<strong>:-)</strong>&check=<strong>emo</strong>&output=<strong>word</strong></a>
+			</p></br>		
+
+			<h4>Some other search examples</h4>
+			</br>
+
+			<p>Check all fields for a token and return the word</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=smile&check=all&output=word">
+					   					   http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>smile</strong>&check=<strong>all</strong>&output=<strong>word</strong></a>
+			</p> </br>
+
+			<p>As above, but return all fields</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=smile&check=all&output=all">
+										   http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>smile</strong>&check=<strong>all</strong>&output=<strong>all</strong></a>
+			</p></br>		
+
+			<p>Either end of token wildcard search</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/wordslang?token=ile&check=slang&output=word&regex=True">
+										   http://word-redsquirrel.dotcloud.com/wordslang?token=<strong>ile</strong>&check=<strong>slang</strong>&output=<strong>word</strong>&<strong>regex=True</strong></a>
+			</p></br>		
+
+			<p>Dump out a unique list of all phonetics</p>
+			<p><a style="color:blue" href="http://word-redsquirrel.dotcloud.com/distinctdump?check=pho&output=distinct">
+										   http://word-redsquirrel.dotcloud.com/distinctdump?check=<strong>pho</strong>&output=<strong>distinct</strong></a>
+			</p></br>		
+
+			</div>
+		<div id="pied">Template design by <a href="http://nicolas.freezee.org">Nicolas Fafchamps</a></div>
+	</div>
+	</body>
+</html>

@@ -59,7 +59,8 @@ def buildCollection(dbh, p, collectionName):
     # Create the collection
     try:
         if p.dropCollection==True:
-            if p.verbose==True: print "---- Dropping Collection."
+            if p.verbose==True:
+                print "---- Dropping Collection."
             print "---- Creating Collection."
             dbh.drop_collection(collectionName)
         dbh.create_collection(collectionName)
@@ -98,4 +99,13 @@ def main(configFile=None):
     mdb.close(c, dbh)
     
 if __name__ == "__main__":
-    main()
+
+    # Command Line arguments
+    configFile = sys.argv[1]
+    
+    # first argument is the config file path
+    if not configFile:
+        print 'no Config file provided. Exiting.'
+        sys.exit()
+    
+    main(configFile)

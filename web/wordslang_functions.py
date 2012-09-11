@@ -112,14 +112,16 @@ def submitDistinctQuery(dbh, p, collection, emoCollection, check):
     except (pymongo.errors.OperationFailure, pymongo.errors.AutoReconnect):
         mdb.authenticate(dbh, p.dbUser, p.dbPassword)
     
+    print check
     # Make sure we use the right collection
     if check == 'emo':
         res = emoCollection.distinct(check)
     else:
         res = collection.distinct(check)
-            
+    
     # Iterate the results into a list
     results = [r for r in res]
+    print results
     
     return ','.join(results)
     

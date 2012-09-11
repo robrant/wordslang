@@ -119,10 +119,13 @@ def word_dump():
     # Get the checks and output
     try:    check = request.query.check.lower()
     except: abort(400, 'No check specified. \n Options: check=%s' %('|'.join(validChecks)))
-
+    print 'Check after the try/except:', check
+    
     # Make sure they conform
     if check not in validChecks:
         abort(400, 'No check specified. \n Options: check=%s' %('|'.join(validChecks)))
+    
+    print 'Check after the check if:', check
     
     results = submitDistinctQuery(dbh, p, collection, emoCollection, check=check)
     

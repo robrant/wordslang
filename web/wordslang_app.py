@@ -119,15 +119,30 @@ def word_dump():
     # Get the checks and output
     try:    check = request.query.check.lower()
     except: abort(400, 'No check specified. \n Options: check=%s' %('|'.join(validChecks)))
-    print 'Check after the try/except:', check
     
     # Make sure they conform
     if check not in validChecks:
         abort(400, 'No check specified. \n Options: check=%s' %('|'.join(validChecks)))
     
-    print 'Check after the check if:', check
+    try:    startsWith = request.query.output.lower()
+    except: startsWith = None
+    if len(startsWith) == 0:
+        startsWith = None
+            
+    # Get the queried word length
+    try:    wordLength = request.query.wordlength.lower()
+    except: wordLength = None
+    if len(wordLength) == 0:
+        wordLength = None
+
+    # Get the tolerance on wordlength
+    try:    edits = request.query.edits.lower()
+    except: edits = None
+    if len(edits) == 0:
+        edits = None
     
-    results = submitDistinctQuery(dbh, p, collection, emoCollection, check=check)
+    results = submitDistinctQuery(dbh, p, collection, emoCollection, check=check,
+                                  startsWith=startsWith, wordLength=wordLength, edits=edits)
     
     return results
     

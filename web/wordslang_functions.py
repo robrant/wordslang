@@ -103,7 +103,8 @@ def checkEmo(emoCollection, token):
 
 #------------------------------------------------------------------------------------
 
-def submitDistinctQuery(dbh, p, collection, emoCollection, check):
+def submitDistinctQuery(dbh, p, collection, emoCollection, check,
+                        startsWith=None, wordLength=None, edits=None):
     '''Query mongo for a UNIQUE list of phonetics.'''
 
     # Quick db quthorisation catch
@@ -115,15 +116,31 @@ def submitDistinctQuery(dbh, p, collection, emoCollection, check):
     # Make sure we use the right collection
     if check == 'emo':
         res = emoCollection.distinct(check)
-    else:
-        res = collection.distinct(check)
     
+    else:
+        # Getting the distinct words/pho based on their length
+        if wordLength and edits:
+            wl, edits = int(wordLength), int(edits)
+            field = "%slen" %(check)
+            q = {field:{"$gte": wl-edits, "$tle": wl+edits}}
+            print "WordlengthEdits:", q
+            res = collection.distinct(check, q)
+        
+        # Only get back the distinct for this leading letter
+        elif startsWith:
+            q = {check : {'$regex':'^%s.*' %startsWith.lower()}}
+            print "Regex Query:", q
+            res = collection.distinct(check, q)
+        
+        else:
+            res = collection.distinct(check)
+        
     # Iterate the results into a list - done like this to remove None vals
     out = ""
     for token in res:
         if token:
-            out += "%s," %(token)
-    out.rstrip(',')
+            out += "%s###" %(token)
+    out.rstrip('###')
     
     return out 
     

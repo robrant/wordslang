@@ -42,7 +42,8 @@ def mongoUpdate(p, collection, word, token):
     ''' Inserts the word and its phonetic representation into a new mongo document. '''
     
     # The query condition for the update
-    q = {'word' : word}
+    q = {'word'   : word,
+         'wordlen': len(word)}
     
     # Just in case the word doesn't already exist, create a new dictionary item with it, so that it maps to the emoticon/slang
     try:

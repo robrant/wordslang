@@ -38,8 +38,10 @@ import mdb
 def mongoInserter(p, collection, word, pho):
     ''' Inserts the word and its phonetic representation into a new mongo document. '''
     
-    record = {'word' : word,
-              'pho'  : pho}
+    record = {'word'    : word,
+              'pho'     : pho,
+              'wordlen' : len(word),
+              'pholen'  : len(pho)}
     
     try:
         if collection.find(record).count() > 0:

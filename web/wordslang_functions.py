@@ -124,13 +124,13 @@ def submitDistinctQuery(dbh, p, collection, emoCollection, check,
             field = "%slen" %(check)
             q = {field:{"$gte": wl-edits, "$tle": wl+edits}}
             print "WordlengthEdits:", q
-            res = collection.distinct(check, q)
+            res = collection.find(q).distinct(check)
         
         # Only get back the distinct for this leading letter
         elif startsWith:
-            q = {check : {'$regex':'^%s.*' %startsWith.lower()}}
+            q = {check : {'$regex':'^%s' %startsWith.lower()}}
             print "Regex Query:", q
-            res = collection.distinct(check, q)
+            res = collection.find(q).distinct(check)
         
         else:
             res = collection.distinct(check)

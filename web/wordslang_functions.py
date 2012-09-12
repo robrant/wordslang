@@ -122,7 +122,7 @@ def submitDistinctQuery(dbh, p, collection, emoCollection, check,
         if wordLength and edits:
             wl, edits = int(wordLength), int(edits)
             field = "%slen" %(check)
-            q = {field:{"$gte": wl-edits, "$tle": wl+edits}}
+            q = {field:{"$gte": wl-edits, "$lte": wl+edits}}
             print "WordlengthEdits:", q
             res = collection.find(q).distinct(check)
         

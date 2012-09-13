@@ -124,13 +124,13 @@ def word_dump():
     if check not in validChecks:
         abort(400, 'No check specified. \n Options: check=%s' %('|'.join(validChecks)))
     
-    try:    startsWith = request.query.output.lower()
+    try:    startsWith = request.query.initial.lower()
     except: startsWith = None
     if len(startsWith) == 0:
         startsWith = None
             
     # Get the queried word length
-    try:    wordLength = request.query.wordlength.lower()
+    try:    wordLength = request.query.length.lower()
     except: wordLength = None
     if len(wordLength) == 0:
         wordLength = None
